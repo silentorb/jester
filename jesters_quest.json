@@ -1,0 +1,35 @@
+{
+  "trellises": {
+    "parent": "object",
+    "quest": {
+      "properties": {
+        "quest_type": {
+          "type": "reference",
+          "trellis": "quest_type"
+        },
+        "status": {
+          "type": "reference",
+          "trellis": "status"
+        }
+      }
+    },
+    "quest_type": {
+      "parent": "object",    
+      "properties": {
+        "quests": {
+          "type": "list",
+          "trellis": "quest"
+        }
+      }   
+    },
+    "status": {
+      "parent": "object",    
+      "properties": {
+        "quests": {
+          "type": "list",
+          "trellis": "quest"
+        }
+      }   
+    }
+  }
+}

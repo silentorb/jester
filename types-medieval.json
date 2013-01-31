@@ -1,0 +1,14 @@
+{
+  "quest_types": [
+  "kingdom",
+  "treasure",
+  "monster",
+  "plea"
+  ],
+  "statuses": [
+  "won't fix",
+  "in progress",
+  "completed",
+  "reopened"
+  ]
+}
