@@ -1,0 +1,8 @@
+name = Jester's Quest
+description = Medieval Issue Tracker built on Vineyard
+core = 6.x
+package = Silent Orb
+php = 5.2
+
+files[] = inc/Jesters_Quest.inc
+files[] = inc/Quest.inc

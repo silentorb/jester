@@ -1,0 +1,9 @@
+{
+  "garden": {
+    "ajax_path": ""
+  },
+  "paths": {
+    "metahub": "metahub.js",
+    "bloom": "bloom.js"
+  }
+}

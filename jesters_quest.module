@@ -1,0 +1,44 @@
+<?php
+
+function jesters_quest_php_menu() {
+  $items['jest'] = array(
+      'title' => 'JSON Test',
+      'page callback' => 'jesters_quest_main',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function jesters_quest_init() {
+  $path = drupal_get_path('module', 'jesters_quest');
+  $json = file_get_contents($path . '/settings.json');
+  if (!$json)
+    throw new Exception('Could not find settings.json!');
+
+  global $jester;
+  $jester = new Jesters_Quest();
+  $jester->settings = json_decode($json);
+}
+
+function jester_embed_settings() {
+  global $jester;
+  return json_encode($jester->settings->garden);
+}
+
+function jesters_quest_main() {
+  global $jester;
+  $path = drupal_get_path('module', 'jesters_quest');
+  ob_start();
+  include $path . '/templates/main.php';
+  $string = ob_get_clean();
+}
+
+function jesters_quest_set_jquery_path() {
+//  drupal_set_message($_GET['q']);
+  if (substr($_GET['q'], 0, 5) != 'admin' && $_GET['q'] != 'front') {
+//    drupal_set_message('new');
+    return array('none' => 'jquery-1.7.1.js', 'min' => 'jquery-1.7.1.min.js');
+  }
+}

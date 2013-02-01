@@ -1,0 +1,172 @@
+MetaHub.import_all(); 
+Bloom.import_all();
+Vineyard.import_all();
+
+var Page = {
+  load: function(ground) {
+    Block.source_path = "sites/all/modules/custom/marlothdb/templates";
+    ground.add('blocks', [ 'blocks' ], Block.load_library);    
+  },
+  initialize: function() {
+    Bloom.output = Page.print;
+    var request = Bloom.get_url_properties();
+    if (request.book) {
+      Page.book = request.book;
+    }
+    
+    Bloom.get('model.json', function(response) {
+      Page.vineyard = Vineyard.create(response.middle_model.trellises, response.bloom_model.trellises);
+      Page.vineyard.update_url = '/marlothdb/ground/update';
+      Page.vineyard.get_url = '/marlothdb/ground/get';
+      Class_List.create(Page.vineyard.trellises, $('.classes'));      
+    
+      Page.content_panel = Content_Panel.create($('.editor .content'));
+      if (request.trellis) {
+        if (request.action == 'create') {
+          Page.content_panel.load_create(Page.vineyard.trellises[request.trellis]);
+        }
+        else if (request.id) {
+          Page.goto_item(request.trellis, request.id);
+        }
+        else {
+          Page.content_panel.load_index(request.trellis);
+        }
+      }
+      
+
+    }); 
+  },
+  initialize_query: function(query) {
+    if (Page.book) {
+      return query + '&book=' + Page.book;
+    }
+    
+    return query;
+  },
+  goto_item: function(trellis_name, id) {
+    var query = Page.initialize_query('/marlothdb/ground/get?trellis=' + trellis_name + '&id=' + id);
+    Bloom.get(query, function(response) {
+      var item = Page.vineyard.trellises[trellis_name].create_seed(response.objects[0]);
+      Page.load_edit(item);
+    });
+  },
+  load_index: function(name) {
+    Page.content_panel.load_index(name);
+  },
+  load_edit: function(item) {
+    Page.content_panel.load_edit(item);
+  },
+  print: function(response) {
+    if (!response.message)
+      return;
+    
+    var container = $('.messages');
+    if (!container.length) {
+      container = $('<div class="messages status"/>');
+      $('.breadcrumb').after(container);
+    }
+    else {
+      container.empty();
+    }
+    
+    container.append($('<div>' + response.message + '</div>'));
+  }
+}
+
+Bloom.initialize_page(Page);
+
+var Class_Item = Flower.sub_class('Class_Item', {
+  initialize: function() {
+    this.element = $('<a href="?trellis=' + this.seed.name + '"/>');
+    this.element.text(this.seed.name);
+  //    this.click(function() {
+  //      Page.content_panel.load_index(this.seed.name);
+  //    });
+  }
+});
+
+var Class_List = List.sub_class('Class_List', {
+  item_type: Class_Item,
+  initialize: function() {
+  }
+});
+
+var Index_Item = Flower.sub_class('Index_Item', {
+  initialize: function() {
+    this.element = $('<div><a href="">' + this.seed.name + '</a></div>');
+    this.element.find('a').attr('href', '?trellis=' + this.seed.trellis.name + '&id=' + this.seed.id);
+  }
+});
+
+var Child_Item = Index_Item.sub_class('Child_Item', {
+  initialize: function() {
+    var self = this;
+    this.element.append('<a class="delete" href="">X</a>');
+    this.element.find('a.delete').click(function(e) {
+      e.preventDefault();
+      self.seed.disconnect_all();
+      self.disconnect_all();
+    });
+  }
+});
+
+var Index_List = List.sub_class('Index_List', {
+  item_type: Index_Item
+});
+
+var Children_List = List.sub_class('Children_List', {
+  block: 'list',
+  item_type: Child_Item
+});
+
+List_Vine.properties.list_type = Children_List;
+
+var Edit_Flower = Vineyard.Arbor.sub_class('Edit_Flower', {
+  block: 'edit-form',
+  initialize: function() {
+    var self = this;
+    this.element.find('input[type=submit], button[type=submit]').click(function(e) {
+      self.seed.plant();
+    });
+  }
+});
+
+var Content_Panel = Flower.sub_class('Content_Panel', {
+  load_index: function(name) {
+    this.element.empty();
+    var seed = Seed_List.create(Page.vineyard.trellises[name]);
+    seed.query = function() {
+      return Page.initialize_query('/marlothdb/ground/get?trellis=' + name);
+    };
+    var list = Index_List.create(seed);
+    this.append(list);
+    seed.update();
+    var query = Page.initialize_query('?action=create&trellis=' + name);
+    var create = $('<div class="create"><a href="'+ query + '">Create</a></div>');
+    this.element.prepend(create);
+  },
+  load_create: function(trellis) {
+    this.element.empty();
+
+    var item = trellis.create_seed({});
+    
+    var edit = Edit_Flower.create({
+      seed: item,
+      trellis: item.trellis
+    });
+    this.append(edit);
+  //    edit.update();
+  },
+  load_edit: function(item) {
+    this.element.empty();
+    if (!item.trellis)
+      throw new Error('item.trellis = null!');
+    
+    var edit = Edit_Flower.create({
+      seed: item,
+      trellis: item.trellis
+    });
+    this.append(edit);
+  //    edit.update();
+  }
+});
