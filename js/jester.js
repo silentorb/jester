@@ -2,59 +2,56 @@ MetaHub.import_all();
 Bloom.import_all();
 Vineyard.import_all();
 
-var Page = {
-  load: function(ground) {
-    Block.source_path = "sites/all/modules/custom/marlothdb/templates";
-    ground.add('blocks', [ 'blocks' ], Block.load_library);    
+var Garden = {
+  blocks: {
+    'blocks': [ 'blocks' ]
   },
   initialize: function() {
-    Bloom.output = Page.print;
+    Bloom.output = Garden.print;
     var request = Bloom.get_url_properties();
     if (request.book) {
-      Page.book = request.book;
+      Garden.book = request.book;
     }
     
     Bloom.get('model.json', function(response) {
-      Page.vineyard = Vineyard.create(response.middle_model.trellises, response.bloom_model.trellises);
-      Page.vineyard.update_url = '/marlothdb/ground/update';
-      Page.vineyard.get_url = '/marlothdb/ground/get';
-      Class_List.create(Page.vineyard.trellises, $('.classes'));      
+      Garden.vineyard = Vineyard.create(response.middle_model.trellises, response.bloom_model.trellises);
+      Garden.vineyard.update_url = '/jester/jest/update';
+      Garden.vineyard.get_url = '/jester/jest/get';
+      Class_List.create(Garden.vineyard.trellises, $('.classes'));      
     
-      Page.content_panel = Content_Panel.create($('.editor .content'));
+      Garden.content_panel = Content_Panel.create($('.editor .content'));
       if (request.trellis) {
         if (request.action == 'create') {
-          Page.content_panel.load_create(Page.vineyard.trellises[request.trellis]);
+          Garden.content_panel.load_create(Garden.vineyard.trellises[request.trellis]);
         }
         else if (request.id) {
-          Page.goto_item(request.trellis, request.id);
+          Garden.goto_item(request.trellis, request.id);
         }
         else {
-          Page.content_panel.load_index(request.trellis);
+          Garden.content_panel.load_index(request.trellis);
         }
       }
-      
-
     }); 
   },
   initialize_query: function(query) {
-    if (Page.book) {
-      return query + '&book=' + Page.book;
+    if (Garden.book) {
+      return query + '&book=' + Garden.book;
     }
     
     return query;
   },
   goto_item: function(trellis_name, id) {
-    var query = Page.initialize_query('/marlothdb/ground/get?trellis=' + trellis_name + '&id=' + id);
+    var query = Garden.initialize_query('/marlothdb/ground/get?trellis=' + trellis_name + '&id=' + id);
     Bloom.get(query, function(response) {
-      var item = Page.vineyard.trellises[trellis_name].create_seed(response.objects[0]);
-      Page.load_edit(item);
+      var item = Garden.vineyard.trellises[trellis_name].create_seed(response.objects[0]);
+      Garden.load_edit(item);
     });
   },
   load_index: function(name) {
-    Page.content_panel.load_index(name);
+    Garden.content_panel.load_index(name);
   },
   load_edit: function(item) {
-    Page.content_panel.load_edit(item);
+    Garden.content_panel.load_edit(item);
   },
   print: function(response) {
     if (!response.message)
@@ -73,14 +70,14 @@ var Page = {
   }
 }
 
-Bloom.initialize_page(Page);
+Bloom.landscape(Garden);
 
 var Class_Item = Flower.sub_class('Class_Item', {
   initialize: function() {
     this.element = $('<a href="?trellis=' + this.seed.name + '"/>');
     this.element.text(this.seed.name);
   //    this.click(function() {
-  //      Page.content_panel.load_index(this.seed.name);
+  //      Garden.content_panel.load_index(this.seed.name);
   //    });
   }
 });
@@ -134,14 +131,14 @@ var Edit_Flower = Vineyard.Arbor.sub_class('Edit_Flower', {
 var Content_Panel = Flower.sub_class('Content_Panel', {
   load_index: function(name) {
     this.element.empty();
-    var seed = Seed_List.create(Page.vineyard.trellises[name]);
+    var seed = Seed_List.create(Garden.vineyard.trellises[name]);
     seed.query = function() {
-      return Page.initialize_query('/marlothdb/ground/get?trellis=' + name);
+      return Garden.initialize_query('/marlothdb/ground/get?trellis=' + name);
     };
     var list = Index_List.create(seed);
     this.append(list);
     seed.update();
-    var query = Page.initialize_query('?action=create&trellis=' + name);
+    var query = Garden.initialize_query('?action=create&trellis=' + name);
     var create = $('<div class="create"><a href="'+ query + '">Create</a></div>');
     this.element.prepend(create);
   },

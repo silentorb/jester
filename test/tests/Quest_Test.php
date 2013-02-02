@@ -8,11 +8,11 @@ class Quest_Test extends Jester_Test_Fixtures {
     $this->populate_database();
   }
 
-  function test_quest_types() {
-    $objects = $this->ground->create_query('quest_type')->run();
-    $this->assertTrue(count($objects) > 0);
-    $this->assertEquals('kingdom', $objects[0]->name);
-  }
+//  function test_quest_types() {
+//    $objects = $this->ground->create_query('quest_type')->run();
+//    $this->assertTrue(count($objects) > 0);
+//    $this->assertEquals('kingdom', $objects[0]->name);
+//  }
 
   function test_quests() {
     $objects = $this->ground->create_query('quest')->run();

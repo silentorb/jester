@@ -1,0 +1,60 @@
+textarea
+{
+  resize: none;
+}
+
+.editor textarea {
+  width: 300pt;  
+}
+
+.editor input {
+  width: 200pt;  
+}
+
+.editor .left-sidebar {
+  float: left;
+  width: 150pt;
+
+}
+.editor .content {
+  margin-left: 150pt;
+}
+
+.editor .content ul{
+
+}
+
+.vine {
+  margin-bottom: 10pt;  
+}
+
+.vine .name {
+  display: inline-block;
+  width: 64pt;
+}
+
+.vine.list {
+
+}
+
+.vine.list ul{
+
+}
+
+a.delete {
+  padding: 0 10pt;
+  font-weight: bold;
+}
+
+/*.index a.delete {
+  display: none;
+}*/
+
+.create {
+  margin-left: 200pt;
+  position: absolute;
+}
+
+.garden-landscape {
+  display: none;
+}

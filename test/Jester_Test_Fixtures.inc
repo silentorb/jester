@@ -12,15 +12,15 @@ class Jester_Test_Fixtures extends Drupal_Test_Fixtures {
     $this->insert_object('quest', array(
         'name' => 'MarlothDB',
         'body' => 'Issues for the Marloth Database',
-        'quest_type' => 0,
-        'status' => 0,
+        'quest_type' => 1,
+        'status' => 1,
     ));
     $this->insert_object('quest', array(
         'name' => 'Sub Quest',
         'body' => 'Sample Sub Quest for the Marloth Database',
-        'quest_type' => 1,
-        'status' => 2,
-        'parent' => 0,
+        'quest_type' => 2,
+        'status' => 3,
+        'parent' => 1,
     ));
   }
 

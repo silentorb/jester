@@ -14,7 +14,18 @@ function jesters_quest_menu() {
       'page arguments' => array(1),
       'type' => MENU_CALLBACK,
   );
-
+  $items['jest/get'] = array(
+      'title' => 'Ground Get',
+      'page callback' => 'jester_get',
+      'access callback' => user_is_logged_in,
+      'type' => MENU_CALLBACK,
+  );
+  $items['jest/update'] = array(
+      'title' => 'Ground Update',
+      'page callback' => 'jester_update',
+      'access callback' => user_is_logged_in,
+      'type' => MENU_CALLBACK,
+  );
   return $items;
 }
 
@@ -25,8 +36,11 @@ function jesters_quest_initialize() {
   if (!$json)
     throw new Exception('Could not find settings.json!');
 
-  $jester = new Jesters_Quest();
-  $jester->settings = json_decode($json);
+  $settings = json_decode($json);
+  $ground = new Ground($jester->settings->database);
+  $jester = $ground->add_module('Jesters_Quest');
+  $jester->settings = $settings;
+  return $ground;
 }
 
 function jester_embed_settings() {
@@ -36,13 +50,14 @@ function jester_embed_settings() {
 
 function jesters_quest_main() {
   global $jester;
-  jesters_quest_initialize();
+  $ground = jesters_quest_initialize();
   $path = drupal_get_path('module', 'jesters_quest');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->metahub . '"></script>');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->bloom . '"></script>');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->vineyard . '"></script>');
   drupal_add_js($path . '/js/jester.js');
-
+  drupal_add_css($path . '/styles/editor.css');
+  
   ob_start();
   include $path . '/templates/main.php';
   $string = ob_get_clean();
@@ -58,11 +73,44 @@ function jesters_quest_set_jquery_path() {
 }
 
 function jesters_quest_vineyard($action) {
-  global $jester;
-  jesters_quest_initialize();
-  $ground = new Ground($jester->settings->database);
-  
+  $ground = jesters_quest_initialize();
   $query = $ground->create_query($_RETRIEVE['trellis']);
-//  return $query->
-  
+}
+
+function jester_get() {
+  $ground = jesters_quest_initialize();
+  $query = $this->ground->create_query($_GET['trellis']);
+  if (isset($_GET['id'])) {
+    $query->add_filter($query->trellis->query_primary_key() . ' = ' . (int) $_GET['id']);
+  }
+  $query->add_post('ORDER BY name');
+
+  $result = $query->run_as_service(true);
+  drupal_json($result);
+}
+
+function jester_update() {
+  if (isset($_POST['objects'])) {
+    $objects = $_POST['objects'];
+  }
+  else {
+    $json = file_get_contents("php://input");
+    $data = json_decode(utf8_encode($json));
+    if ($data)
+      $objects = $data->objects;
+  }
+
+  $ground = jesters_quest_initialize();
+
+  try {
+    foreach ($seeds as $seed) {
+      $result = $ground->insert_object($seed->trellis, $seed);
+    }
+    $result->success = true;
+  }
+  catch (Exception $ex) {
+    $result->message = $ex->getMessage();
+    $result->success = false;
+  }
+  drupal_json($result);
 }

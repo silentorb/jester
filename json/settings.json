@@ -1,7 +1,8 @@
 {
   "database": "jester_test",
   "garden": {
-    "ajax_path": ""
+    "ajax_path": "",
+    "block_path": ""
   },
   "paths": {
     "metahub": "/bloom/js/metahub.js",
