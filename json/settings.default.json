@@ -1,9 +1,11 @@
 {
+  "database": "jester_test",
   "garden": {
     "ajax_path": ""
   },
   "paths": {
-    "metahub": "metahub.js",
-    "bloom": "bloom.js"
+    "metahub": "/bloom/js/metahub.js",
+    "bloom": "/bloom/js/bloom.js",
+    "vineyard": "/bloom/js/vineyard.js"
   }
 }

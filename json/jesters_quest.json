@@ -1,8 +1,24 @@
 {
+  "tables": {
+    "status": {
+      "name": "status_types"
+    }
+  },
   "trellises": {
-    "parent": "object",
     "quest": {
+      "parent": "object",
       "properties": {
+        "body": {
+          "type": "text"
+        },
+        "parent": {
+          "type": "reference",
+          "trellis": "quest"
+        },
+        "children": {
+          "type": "list",
+          "trellis": "quest"
+        },
         "quest_type": {
           "type": "reference",
           "trellis": "quest_type"
@@ -14,8 +30,13 @@
       }
     },
     "quest_type": {
-      "parent": "object",    
       "properties": {
+        "id": {
+          "type": "int"
+        },
+        "name": {
+          "type": "string"
+        },
         "quests": {
           "type": "list",
           "trellis": "quest"
@@ -23,8 +44,13 @@
       }   
     },
     "status": {
-      "parent": "object",    
       "properties": {
+        "id": {
+          "type": "int"
+        },
+        "name": {
+          "type": "string"
+        },
         "quests": {
           "type": "list",
           "trellis": "quest"

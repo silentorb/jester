@@ -5,10 +5,10 @@
   "monster",
   "plea"
   ],
-  "statuses": [
-  "won't fix",
+  "status_types": [
   "in progress",
   "completed",
+  "won't fix",
   "reopened"
   ]
 }
