@@ -17,7 +17,7 @@ var Garden = {
       Garden.vineyard = Vineyard.create(response.middle_model.trellises, response.bloom_model.trellises);
       Garden.vineyard.update_url = '/jester/jest/update';
       Garden.vineyard.get_url = '/jester/jest/get';
-      Class_List.create(Garden.vineyard.trellises, $('.classes'));      
+      Quest_List.create($('.quest-list'));      
     
       Garden.content_panel = Content_Panel.create($('.editor .content'));
       if (request.trellis) {
@@ -80,6 +80,24 @@ var Class_Item = Flower.sub_class('Class_Item', {
   //      Garden.content_panel.load_index(this.seed.name);
   //    });
   }
+});
+
+var Quest_List = Flower.sub_class('Class_Item', {
+  initialize: function() {
+    this.element = $('<a href="?trellis=' + this.seed.name + '"/>');
+    this.element.text(this.seed.name);
+  //    this.click(function() {
+  //      Garden.content_panel.load_index(this.seed.name);
+  //    });
+  },
+set_seed: function(seed) {
+this.seed = seed;
+this.element.empty();
+for(var x = 0; x < seed.length; ++x) {
+  var element = $('<a href="?trellis=' + seed[x].name + '"/>');
+element.text(seed[x].name);
+this.element.append(element);
+}
 });
 
 var Class_List = List.sub_class('Class_List', {
