@@ -74,7 +74,7 @@ Bloom.landscape(Garden);
 
 var Class_Item = Flower.sub_class('Class_Item', {
   initialize: function() {
-    this.element = $('<a href="?trellis=' + this.seed.name + '"/>');
+    this.element = $('<a href="?trellis=quest&id=' + this.seed.id + '"/>');
     this.element.text(this.seed.name);
   //    this.click(function() {
   //      Garden.content_panel.load_index(this.seed.name);
