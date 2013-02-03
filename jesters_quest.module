@@ -17,13 +17,25 @@ function jesters_quest_menu() {
   $items['jest/get'] = array(
       'title' => 'Ground Get',
       'page callback' => 'jester_get',
-      'access callback' => user_is_logged_in,
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+  );
+  $items['jest/get_root_quests'] = array(
+      'title' => 'Ground Get Root Quests',
+      'page callback' => 'jester_get_root_quests',
+      'access callback' => TRUE,
       'type' => MENU_CALLBACK,
   );
   $items['jest/update'] = array(
       'title' => 'Ground Update',
       'page callback' => 'jester_update',
       'access callback' => user_is_logged_in,
+      'type' => MENU_CALLBACK,
+  );
+  $items['model.json'] = array(
+      'title' => 'Vineyard Model',
+      'page callback' => 'jester_model',
+      'access callback' => TRUE,
       'type' => MENU_CALLBACK,
   );
   return $items;
@@ -37,7 +49,7 @@ function jesters_quest_initialize() {
     throw new Exception('Could not find settings.json!');
 
   $settings = json_decode($json);
-  $ground = new Ground($jester->settings->database);
+  $ground = new Ground($settings->database);
   $jester = $ground->add_module('Jesters_Quest');
   $jester->settings = $settings;
   return $ground;
@@ -57,7 +69,7 @@ function jesters_quest_main() {
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->vineyard . '"></script>');
   drupal_add_js($path . '/js/jester.js');
   drupal_add_css($path . '/styles/editor.css');
-  
+
   ob_start();
   include $path . '/templates/main.php';
   $string = ob_get_clean();
@@ -79,7 +91,7 @@ function jesters_quest_vineyard($action) {
 
 function jester_get() {
   $ground = jesters_quest_initialize();
-  $query = $this->ground->create_query($_GET['trellis']);
+  $query = $ground->create_query($_GET['trellis']);
   if (isset($_GET['id'])) {
     $query->add_filter($query->trellis->query_primary_key() . ' = ' . (int) $_GET['id']);
   }
@@ -89,11 +101,20 @@ function jester_get() {
   drupal_json($result);
 }
 
+function jester_get_root_quests() {
+  $ground = jesters_quest_initialize();
+  $query = $ground->create_query('quest');
+  $query->add_filter('quests.parent IS NULL');
+  $query->add_post('ORDER BY name');
+
+  $result = $query->run_as_service(true);
+  drupal_json($result);
+}
+
 function jester_update() {
   if (isset($_POST['objects'])) {
     $objects = $_POST['objects'];
-  }
-  else {
+  } else {
     $json = file_get_contents("php://input");
     $data = json_decode(utf8_encode($json));
     if ($data)
@@ -107,10 +128,14 @@ function jester_update() {
       $result = $ground->insert_object($seed->trellis, $seed);
     }
     $result->success = true;
-  }
-  catch (Exception $ex) {
+  } catch (Exception $ex) {
     $result->message = $ex->getMessage();
     $result->success = false;
   }
   drupal_json($result);
+}
+
+function jester_model() {
+  $ground = jesters_quest_initialize();
+  print $ground->to_json();
 }

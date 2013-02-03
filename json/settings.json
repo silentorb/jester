@@ -2,7 +2,7 @@
   "database": "jester_test",
   "garden": {
     "ajax_path": "",
-    "block_path": ""
+    "block_path": "sites/all/modules/custom/jesters_quest/templates"
   },
   "paths": {
     "metahub": "/bloom/js/metahub.js",

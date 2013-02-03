@@ -9,15 +9,12 @@ var Garden = {
   initialize: function() {
     Bloom.output = Garden.print;
     var request = Bloom.get_url_properties();
-    if (request.book) {
-      Garden.book = request.book;
-    }
     
     Bloom.get('model.json', function(response) {
-      Garden.vineyard = Vineyard.create(response.middle_model.trellises, response.bloom_model.trellises);
+      Garden.vineyard = Vineyard.create(response.trellises, response.arbors);
       Garden.vineyard.update_url = '/jester/jest/update';
       Garden.vineyard.get_url = '/jester/jest/get';
-      Quest_List.create($('.quest-list'));      
+      var quests = Quest_List.create($('.quest-list'));      
     
       Garden.content_panel = Content_Panel.create($('.editor .content'));
       if (request.trellis) {
@@ -27,21 +24,22 @@ var Garden = {
         else if (request.id) {
           Garden.goto_item(request.trellis, request.id);
         }
-        else {
-          Garden.content_panel.load_index(request.trellis);
-        }
+      }
+      else {
+        var query = Garden.initialize_query('/jester/jest/get_root_quests');
+        Bloom.get(query, function(response) {
+          quests.set_seed(response.objects);
+        });
+      //Garden.content_panel.load_index(request.trellis);
       }
     }); 
   },
   initialize_query: function(query) {
-    if (Garden.book) {
-      return query + '&book=' + Garden.book;
-    }
     
     return query;
   },
   goto_item: function(trellis_name, id) {
-    var query = Garden.initialize_query('/marlothdb/ground/get?trellis=' + trellis_name + '&id=' + id);
+    var query = Garden.initialize_query('/jester/jest/get?trellis=' + trellis_name + '&id=' + id);
     Bloom.get(query, function(response) {
       var item = Garden.vineyard.trellises[trellis_name].create_seed(response.objects[0]);
       Garden.load_edit(item);
@@ -83,21 +81,15 @@ var Class_Item = Flower.sub_class('Class_Item', {
 });
 
 var Quest_List = Flower.sub_class('Class_Item', {
-  initialize: function() {
-    this.element = $('<a href="?trellis=' + this.seed.name + '"/>');
-    this.element.text(this.seed.name);
-  //    this.click(function() {
-  //      Garden.content_panel.load_index(this.seed.name);
-  //    });
-  },
-set_seed: function(seed) {
-this.seed = seed;
-this.element.empty();
-for(var x = 0; x < seed.length; ++x) {
-  var element = $('<a href="?trellis=' + seed[x].name + '"/>');
-element.text(seed[x].name);
-this.element.append(element);
-}
+  set_seed: function(seed) {
+    this.seed = seed;
+    this.element.empty();
+    for(var x = 0; x < seed.length; ++x) {
+      var element = $('<a href="?trellis=quest&id=' + seed[x].id + '"/>');
+      element.text(seed[x].name);
+      this.element.append(element);
+    }
+  }
 });
 
 var Class_List = List.sub_class('Class_List', {
@@ -151,7 +143,7 @@ var Content_Panel = Flower.sub_class('Content_Panel', {
     this.element.empty();
     var seed = Seed_List.create(Garden.vineyard.trellises[name]);
     seed.query = function() {
-      return Garden.initialize_query('/marlothdb/ground/get?trellis=' + name);
+      return Garden.initialize_query('/jester/jest/get_root_quests?trellis=' + name);
     };
     var list = Index_List.create(seed);
     this.append(list);
