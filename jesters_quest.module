@@ -98,7 +98,9 @@ function jester_get() {
   $query->add_post('ORDER BY name');
 
   $result = $query->run_as_service(true);
-  drupal_json($result);
+    drupal_set_header('Content-Type: application/json');
+ print json_encode($result);
+//  drupal_json($result);
 }
 
 function jester_get_root_quests() {
@@ -112,9 +114,10 @@ function jester_get_root_quests() {
 }
 
 function jester_update() {
-  if (isset($_POST['objects'])) {
+if (isset($_POST['objects'])) {
     $objects = $_POST['objects'];
-  } else {
+  }
+  else {
     $json = file_get_contents("php://input");
     $data = json_decode(utf8_encode($json));
     if ($data)
@@ -124,7 +127,8 @@ function jester_update() {
   $ground = jesters_quest_initialize();
 
   try {
-    foreach ($seeds as $seed) {
+    foreach ($objects as $seed) {
+      $seed = (object) $seed;
       $result = $ground->insert_object($seed->trellis, $seed);
     }
     $result->success = true;
@@ -137,5 +141,7 @@ function jester_update() {
 
 function jester_model() {
   $ground = jesters_quest_initialize();
+  drupal_set_header('Content-Type: application/json');
+
   print $ground->to_json();
 }

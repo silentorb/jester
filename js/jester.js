@@ -39,6 +39,8 @@ var Garden = {
     return query;
   },
   goto_item: function(trellis_name, id) {
+    if (typeof trellis_name == 'object')
+      trellis_name = trellis_name.name;
     var query = Garden.initialize_query('/jester/jest/get?trellis=' + trellis_name + '&id=' + id);
     Bloom.get(query, function(response) {
       var item = Garden.vineyard.trellises[trellis_name].create_seed(response.objects[0]);
