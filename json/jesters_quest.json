@@ -57,5 +57,23 @@
         }
       }   
     }
+  },
+  "views": {
+    "quest": {
+      "properties": {
+        "children": {
+          "visible": false
+        },
+        "quest_type": {
+          "order": null
+        },
+        "status": {
+          "order": null
+        },
+        "parent": {
+          "visible": false
+        }
+      }
+    }
   }
 }
