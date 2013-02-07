@@ -1,5 +1,5 @@
 <div class="editor">
-  <div class="left-sidebar">
+  <div class="right-sidebar">
     <ul class="quest-list"> </ul>
   </div>
   <div class="content"></div>

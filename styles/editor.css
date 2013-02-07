@@ -11,13 +11,12 @@ textarea
   width: 200pt;  
 }
 
-.editor .left-sidebar {
-  float: left;
+.editor .right-sidebar {
+  float: right;
   width: 150pt;
-
+min-height: 100pt;
 }
 .editor .content {
-  margin-left: 150pt;
 }
 
 .editor .content ul{
@@ -50,10 +49,6 @@ a.delete {
   display: none;
 }*/
 
-.create {
-  margin-left: 200pt;
-  position: absolute;
-}
 
 #garden-landscape {
   display: none;
