@@ -1,6 +1,6 @@
 <?php
 
-class Jesters_Quest extends Ground_Module {
+class Jester extends Ground_Module {
 
   function initialize($ground) {
     parent::initialize($ground);

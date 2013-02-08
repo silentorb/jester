@@ -4,7 +4,7 @@ class Jester_Test_Fixtures extends Drupal_Test_Fixtures {
 
   function fixture_load_ground() {
     $this->ground = new Ground('jester_test');
-    $this->jester = $this->ground->add_module('Jesters_Quest');
+    $this->jester = $this->ground->add_module('Jester');
   }
 
   function populate_database() {

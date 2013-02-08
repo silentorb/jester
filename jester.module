@@ -1,9 +1,9 @@
 <?php
 
-function jesters_quest_menu() {
+function jester_menu() {
   $items['jest'] = array(
       'title' => 'Jestor!',
-      'page callback' => 'jesters_quest_main',
+      'page callback' => 'jester_main',
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
   );
@@ -17,10 +17,10 @@ function jesters_quest_menu() {
   return $items;
 }
 
-function jesters_quest_init() {
+function jester_init() {
   global $jester;
   
-  $path = drupal_get_path('module', 'jesters_quest');
+  $path = drupal_get_path('module', 'jester');
   $json = file_get_contents($path . '/json/settings.json');
   if (!$json)
     throw new Exception('Could not find settings.json!');
@@ -30,7 +30,7 @@ function jesters_quest_init() {
     throw new Exception('Invalid JSON in settings.json!');
 
   $ground = new Ground($settings->database);
-  $jester = $ground->add_module('Jesters_Quest');
+  $jester = $ground->add_module('jester');
   $jester->settings = $settings;
   Ground::$vineyard_ground = $ground;
 }
@@ -40,10 +40,10 @@ function jester_embed_settings() {
   return json_encode($jester->settings->garden);
 }
 
-function jesters_quest_main() {
+function jester_main() {
   global $jester;
   $ground = Ground::$vineyard_ground;
-  $path = drupal_get_path('module', 'jesters_quest');
+  $path = drupal_get_path('module', 'jester');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->metahub . '"></script>');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->bloom . '/js/bloom.js"></script>');
   drupal_set_html_head('<script type="text/javascript" src="' . $jester->settings->paths->bloom . '/js/vineyard.js"></script>');
@@ -57,7 +57,7 @@ function jesters_quest_main() {
   return $string;
 }
 
-function jesters_quest_set_jquery_path() {
+function jester_set_jquery_path() {
 //  drupal_set_message($_GET['q']);
   if (substr($_GET['q'], 0, 5) != 'admin' && $_GET['q'] != 'front') {
 //    drupal_set_message('new');
@@ -65,7 +65,7 @@ function jesters_quest_set_jquery_path() {
   }
 }
 
-function jesters_quest_vineyard($action) {
+function jester_vineyard($action) {
   $ground = Ground::$vineyard_ground;
   $query = $ground->create_query($_RETRIEVE['trellis']);
 }

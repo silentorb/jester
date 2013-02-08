@@ -1,3 +1,3 @@
-# Jester's Quest
+# Jester
 
 Copyright 2013 Silent Orb
