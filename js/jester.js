@@ -16,7 +16,10 @@ var Jester = Garden.grow('Jester', {
       var self = this;
       var query = this.initialize_query('jest/get_root_quests');
       Bloom.get(query, function(response) {
-        self.quests.set_seed(response.objects);
+        var objects = response.objects.map(function(x) {
+          return self.vineyard.trellises['quest'].create_seed(x);
+        });
+        self.quests.set_seed(objects);
       });
     });
     
@@ -31,7 +34,7 @@ var Jester = Garden.grow('Jester', {
        
         create_link.attr('href', '/jester/jest/quest/create?parent=' + item.id);
        
-        this.quests.set_seed(item.children);
+        this.quests.set_seed(item.value('children'));
       }
     });
   },
@@ -57,8 +60,8 @@ var Quest_List = Flower.sub_class('Class_Item', {
     this.seed = seed;
     this.element.empty();
     for(var x = 0; x < seed.length; ++x) {
-      var element = $('<a href="?trellis=quest&id=' + seed[x].id + '"/>');
-      element.text(seed[x].name);
+      var element = $('<a href="' + seed[x].get_url('page') + '"/>');
+      element.text(seed[x].value('name'));
       this.element.append(element);
     }
   }

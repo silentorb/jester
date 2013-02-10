@@ -7,8 +7,8 @@ class Jester extends Ground_Module {
     $ground->add_module('Ground_Drupal');
     $history = $ground->add_module('History');
 //    $ground->trellises['history_commit']->add_property('comment');
-    $path = drupal_get_path('module', 'jesters_quest');
-    $ground->load_schema_from_file($path . '/json/jesters_quest.json');
+    $path = drupal_get_path('module', 'jester');
+    $ground->load_schema_from_file($path . '/json/jester.json');
 
     $types = Ground::load_json_from_file($path . '/json/types-medieval.json');
     $this->quest_types = $types->quest_types;

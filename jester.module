@@ -19,7 +19,7 @@ function jester_menu() {
 
 function jester_init() {
   global $jester;
-  
+
   $path = drupal_get_path('module', 'jester');
   $json = file_get_contents($path . '/json/settings.json');
   if (!$json)
@@ -30,7 +30,7 @@ function jester_init() {
     throw new Exception('Invalid JSON in settings.json!');
 
   $ground = new Ground($settings->database);
-  $jester = $ground->add_module('jester');
+  $jester = $ground->add_module('Jester');
   $jester->settings = $settings;
   Ground::$vineyard_ground = $ground;
 }
