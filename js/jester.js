@@ -3,7 +3,7 @@ Bloom.import_all();
 Vineyard.import_all();
 
 var Jester = Garden.grow('Jester', {
-  app_path: 'jest',
+  page_path: 'jest',
   blocks: {
     'blocks': [ 'blocks' ]
   },

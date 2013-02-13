@@ -16,7 +16,7 @@ class Quest_Test extends Jester_Test_Fixtures {
 
   function test_quests() {
     $objects = $this->ground->create_query('quest')->run();
-    print_r($objects);
+//    print_r($objects);
     $this->assertTrue(count($objects) > 0);
     $this->assertEquals('MarlothDB', $objects[0]->name);
     $this->assertInstanceOf('stdClass', $objects[0]->quest_type);

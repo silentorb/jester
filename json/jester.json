@@ -26,6 +26,13 @@
         "status": {
           "type": "reference",
           "trellis": "status"
+        },
+        "hero": {
+          "type": "reference",
+          "trellis": "user"
+        },
+        "due": {
+          "type": "date"
         }
       }
     },
@@ -61,9 +68,6 @@
   "views": {
     "quest": {
       "properties": {
-        "children": {
-          "visible": false
-        },
         "quest_type": {
           "order": null
         },
