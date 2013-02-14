@@ -1,11 +1,12 @@
 {
+  "global": false,
   "database": "jester_test",
   "garden": {
-    "ajax_path": ""
+    "app_path": "/jester",
+    "block_path": "/jester/sites/all/modules/custom/jester/templates"
   },
   "paths": {
     "metahub": "/bloom/js/metahub.js",
-    "bloom": "/bloom/js/bloom.js",
-    "vineyard": "/bloom/js/vineyard.js"
+    "bloom": "/bloom"
   }
 }

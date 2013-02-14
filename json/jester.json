@@ -68,6 +68,9 @@
   "views": {
     "quest": {
       "properties": {
+        "name": {
+          "label": null
+        },
         "quest_type": {
           "order": null
         },
